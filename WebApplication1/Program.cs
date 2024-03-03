@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -23,7 +24,7 @@ namespace WebApplication1
     public class CompanyController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly CalcService _calcService; // Çàëèøèòè CalcService ÿê ïðèâàòíå ïîëå
+        private readonly CalcService _calcService; // Ð—Ð°Ð»Ð¸ÑˆÐ¸Ñ‚Ð¸ CalcService ÑÐº Ð¿Ñ€Ð¸Ð²Ð°Ñ‚Ð½Ðµ Ð¿Ð¾Ð»Ðµ
         private readonly TimeOfDayService _timeOfDayService;
 
         private static readonly Random _random = new Random();
@@ -114,7 +115,6 @@ namespace WebApplication1
             var timeOfDay = _timeOfDayService.GetTimeOfDay();
             return Ok(timeOfDay);
         }
-
     }
 
     public class CompanyService
@@ -200,6 +200,8 @@ namespace WebApplication1
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddControllersWithViews();
+
             // Add services to the container.
             builder.Services.AddRazorPages();
 
@@ -236,6 +238,18 @@ namespace WebApplication1
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseErrorLoggingMiddleware("Logs/errorlog.txt");
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute(
+                    name: "checkCookies",
+                    pattern: "/CheckCookies",
+                    defaults: new { controller = "CheckCookies", action = "OnGet" });
+            });
 
             app.MapRazorPages();
 
