@@ -1,0 +1,20 @@
+﻿@page
+@model WebApplication1.Pages.CheckCookiesModel
+@{
+    ViewData["Title"] = "Check Cookies";
+}
+
+<div class="container">
+    <h2>Check Cookies</h2>
+
+    <div>
+        @if (Model.CookieValue != null)
+        {
+            <p>Value in cookies: @Model.CookieValue</p>
+        }
+        else
+        {
+            <p>No value found in cookies.</p>
+        }
+    </div>
+</div>
